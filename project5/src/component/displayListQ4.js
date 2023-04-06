@@ -12,8 +12,9 @@ function ListDisplay() {
   ]);
 
   const handleDelete = (index) => {
-    const newItems = [...items];
-    newItems.splice(index, 1);
+    // const newItems = [...items];
+    // newItems.splice(index, 1);
+    const newItems = items.filter((i,idx)=>idx!==index)
     setItems(newItems);
     console.log(newItems);
   };
@@ -36,7 +37,7 @@ function ListDisplay() {
           <tbody>
             {items.map((item, index) => (
               <tr key={index}>
-                <td>{item}</td>
+                <td><input value={item} /></td>
                 <td>
                   <button onClick={() => handleDelete(index)}>Delete</button>
                 </td>

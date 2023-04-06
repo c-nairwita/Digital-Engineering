@@ -25,7 +25,7 @@ function App() {
       {/* <Dropdown options={options} /> */}
       {/* <ListReducer /> */}
       {/* <ListMemo items = {items} /> */}
-      <MenuParentComponent />
+      {/* <MenuParentComponent /> */}
     </div>
   );
 }

@@ -25,8 +25,8 @@ function Quiz() {
     const answer = window.prompt("Enter your answer: ");
     const correctAnswer = answers[currentQuestionIndex];
 
-    if (answer.localeCompare(correctAnswer, undefined, { sensitivity: 'base' }) === 0) {
-      setScore(score + 1);
+    if(answer.toLowerCase() === correctAnswer.toLowerCase()){
+      setScore(score + 1)
     }
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };

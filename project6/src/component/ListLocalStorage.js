@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import "../App.css";
 
 function ListManipulation() {
-  const [itemList, setItemList] = useState(
-    localStorage.getItem("itemList") === undefined ||
-      localStorage.getItem("itemList") === null
-      ? []
-      : JSON.parse(localStorage.getItem("itemList"))
-  );
+  // const [itemList, setItemList] = useState(
+  //   localStorage.getItem("itemList") === undefined ||
+  //     localStorage.getItem("itemList") === null
+  //     ? []
+  //     : JSON.parse(localStorage.getItem("itemList"))
+  // );
+  const [itemList, setItemList] = useState(JSON.parse(localStorage.getItem("itemList"))??[]);
   const [item, setItem] = useState("");
   const [editing, setEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState("");
@@ -85,7 +86,7 @@ function ListManipulation() {
           {itemList.length !== 0 ? (
             <ul>
               {itemList.map((item, index) => (
-                <li>
+                <li key={index}>
                   <div id="left" style={{ display: "flex" }}>
                     <div id="name">{item}</div>
                     <div id="edit" style={{ display: "flex" }}>
