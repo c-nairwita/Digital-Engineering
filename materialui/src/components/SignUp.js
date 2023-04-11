@@ -1,12 +1,17 @@
 import {
   Alert,
+  AlertTitle,
   Avatar,
   Button,
   Grid,
+  IconButton,
   Paper,
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -15,6 +20,10 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [values, setValues] = useState({
+    password: "",
+    showPassword: false,
+  });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem("data")) ?? []
@@ -25,7 +34,7 @@ const SignUp = () => {
 
   const paperStyle = {
     padding: 20,
-    height: 580,
+    height: 550,
     width: "350px",
     margin: "20px auto",
   };
@@ -69,7 +78,7 @@ const SignUp = () => {
         ),
       confirmPassword: Yup.string()
         .required("Enter password again")
-        .oneOf([Yup.ref("password"), null], "Passwords must match"),
+        .oneOf([Yup.ref("password"), null], "Password does not match"),
     }),
 
     onSubmit: (value) => {
@@ -88,17 +97,38 @@ const SignUp = () => {
       setIsSubmitted(true);
       setTimeout(() => {
         setIsSubmitted(false);
-      }, 3000);
+      }, 5000);
     },
   });
+
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  // const handleMouseDownPassword = (event) => {
+  //   event.preventDefault();
+  // };
 
   return (
     <>
       <Grid>
+        {isSubmitted ? (
+          <>
+            <Alert
+              severity="success"
+              sx={{ width: "30%", margin: "auto", marginTop: "1%" }}
+            >
+              <AlertTitle>Success</AlertTitle>
+              Account created — <strong>You can login!</strong>
+            </Alert>
+          </>
+        ) : (
+          []
+        )}
         <Paper style={paperStyle} elevation={12}>
           <Avatar style={avatarStyle}></Avatar>
           <h2 style={headerStyle}>Sign-Up</h2>
-          <form onSubmit={formik.handleSubmit} style={{textAlign: 'center'}}>
+          <form onSubmit={formik.handleSubmit} style={{ textAlign: "center" }}>
             <TextField
               id="outlined-basic"
               name="userName"
@@ -138,6 +168,8 @@ const SignUp = () => {
             <TextField
               id="outlined-basic"
               name="password"
+              type={values.showPassword ? "text" : "password"}
+              autoComplete="off"
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -146,10 +178,26 @@ const SignUp = () => {
               label="Password"
               style={marginTop}
               fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}                
+                    >
+                      {values.showPassword ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             ></TextField>
             <TextField
               id="outlined-basic"
               name="confirmPassword"
+              type="password"
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -169,15 +217,8 @@ const SignUp = () => {
               color="secondary"
               style={buttonStyle}
             >
-              Submit
+              Sign Up
             </Button>
-            {isSubmitted ? (
-              <>
-                <Alert severity="success">Successfully signed up!</Alert>
-              </>
-            ) : (
-              []
-            )}
           </form>
         </Paper>
       </Grid>

@@ -73,7 +73,7 @@ const Contact = () => {
         <Typography variant="heading" sx={{ textAlign: "center" }}>
           Fill the form given below:
         </Typography>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} style={{textAlign: 'center'}}>
           <TextField
             id="outlined-basic"
             name="userName"
