@@ -1,55 +1,52 @@
 import React, { useState } from "react";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   Typography,
   Tabs,
   Tab,
-  Box,
   Button,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
+import DrawerComponent from "../components/DrawerComponent";
 import Home from "../components/Home";
 import About from "../components/About";
 import Services from "../components/Services";
 import Products from "../components/Products";
 import Contact from "../components/Contact";
-import DrawerComponent from "../components/DrawerComponent";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 
-const Dashboard = () => {
+const DashboardRouter = () => {
   const [value, setValue] = useState(0);
   const [currentTab, setCurrentTab] = useState(
     sessionStorage.getItem("currentTab")
       ? JSON.parse(sessionStorage.getItem("currentTab"))
       : 0
   );
+  const routes = [
+    { path: "/home", component: Home },
+    { path: "/about", component: About },
+    { path: "/services", component: Services },
+    { path: "/products", component: Products },
+    { path: "/contact", component: Contact },
+    { path: "/login", component: Login },
+    { path: "/signup", component: SignUp },
+  ];
 
+  const navigate = useNavigate();
   const theme = useTheme();
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleChange = (e, val) => {
+    navigate(routes[val].path);
     setValue(val);
     setCurrentTab(val);
     console.log(val);
     sessionStorage.setItem("currentTab", JSON.stringify(val));
-  };
-
-  const TabPanel = (props) => {
-    const { children, value, index } = props;
-
-    return (
-      <div>
-        {value === index && (
-          <Box>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -76,16 +73,17 @@ const Dashboard = () => {
                 value={currentTab}
                 onChange={handleChange}
               >
-                <Tab label="Home"></Tab>
-                <Tab label="About Us"></Tab>
-                <Tab label="Services"></Tab>
-                <Tab label="Products"></Tab>
-                <Tab label="Contact Us"></Tab>
+                <Tab label="Home" component={Link} to="/home"></Tab>
+                <Tab label="About Us" component={Link} to="/about"></Tab>
+                <Tab label="Services" component={Link} to="/services"></Tab>
+                <Tab label="Products" component={Link} to="/products"></Tab>
+                <Tab label="Contact Us" component={Link} to="/contact"></Tab>
               </Tabs>
               {JSON.parse(sessionStorage.getItem("loggedData")) ? (
                 <Button
                   onClick={(e) => {
-                    handleChange(e, 5);
+                    // handleChange(e, 5);
+                    navigate("/login");
                     sessionStorage.removeItem("loggedData");
                   }}
                   value={value}
@@ -97,7 +95,10 @@ const Dashboard = () => {
               ) : (
                 <>
                   <Button
-                    onClick={(e) => handleChange(e, 5)}
+                    onClick={(e) =>
+                      // handleChange(e, 5)}
+                      navigate("/login")
+                    }
                     value={value}
                     variant="contained"
                     sx={{ marginRight: "1%" }}
@@ -106,7 +107,10 @@ const Dashboard = () => {
                   </Button>
 
                   <Button
-                    onClick={(e) => handleChange(e, 6)}
+                    onClick={(e) =>
+                      // handleChange(e, 6)}
+                      navigate("/signup")
+                    }
                     value={value}
                     variant="contained"
                   >
@@ -119,31 +123,17 @@ const Dashboard = () => {
         </Toolbar>
       </AppBar>
 
-      <div>
-        <TabPanel value={currentTab} index={0}>
-          <Home />
-        </TabPanel>
-        <TabPanel value={currentTab} index={1}>
-          <About />
-        </TabPanel>
-        <TabPanel value={currentTab} index={2}>
-          <Services />
-        </TabPanel>
-        <TabPanel value={currentTab} index={3}>
-          <Products />
-        </TabPanel>
-        <TabPanel value={currentTab} index={4}>
-          <Contact />
-        </TabPanel>
-        <TabPanel value={currentTab} index={5}>
-          <Login handleChange={handleChange} />
-        </TabPanel>
-        <TabPanel value={currentTab} index={6}>
-          <SignUp handleChange={handleChange} />
-        </TabPanel>
-      </div>
+      <Routes>
+        <Route exact path="/home" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
     </>
   );
 };
 
-export default Dashboard;
+export default DashboardRouter;

@@ -8,19 +8,8 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
-// import { makeStyles } from "@mui/styles";
 
 const Products = () => {
-  // const useStyles = makeStyles({
-  //   root: {
-  //     height: "100%",
-  //     maxWidth: "60%",
-  //   },
-  //   media: {
-  //     height: 150,
-  //   },
-  // });
-  // const classes = useStyles();
 
   return (
     <>

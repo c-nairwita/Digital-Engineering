@@ -1,17 +1,8 @@
 import React from "react";
 import { Grid, Card, CardContent, Typography, Paper } from "@mui/material";
-//import {makeStyles} from '@mui/styles';
 import { services } from "../constants/ServiceConstant";
 
 const Services = () => {
-// const useStyles = makeStyles({
-//     section:{
-//         textAlign: 'center',
-//         height: '80%'
-//     }
-// })
-
-// const classes = useStyles();
 
   return (
     <>

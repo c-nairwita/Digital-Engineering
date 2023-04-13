@@ -1,11 +1,17 @@
-import React from 'react'
+import React from "react";
 
 const Home = () => {
-  return (
-    <div>
-      <h1>Welcome</h1>
-    </div>
-  )
-}
+  const loggedData = JSON.parse(sessionStorage.getItem("loggedData"))
 
-export default Home
+  return (
+    <>
+      {loggedData !== null ? (
+        <h1>Welcome {loggedData.userName}</h1>
+      ) : (
+        <h1>Welcome</h1>
+      )}
+    </>
+  );
+};
+
+export default Home;

@@ -14,8 +14,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+const SignUp = ({ handleChange }) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -26,11 +27,17 @@ const SignUp = () => {
   });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [data, setData] = useState(
-    JSON.parse(localStorage.getItem("data")) ?? []
+    JSON.parse(localStorage.getItem("data")) !== undefined &&
+      JSON.parse(localStorage.getItem("data")) !== null &&
+      JSON.parse(localStorage.getItem("data")).length > 0
+      ? JSON.parse(localStorage.getItem("data"))
+      : []
   );
   const [isSubmitted, setIsSubmitted] = useState(false);
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+  const navigate = useNavigate();
 
   const paperStyle = {
     padding: 20,
@@ -81,7 +88,7 @@ const SignUp = () => {
         .oneOf([Yup.ref("password"), null], "Password does not match"),
     }),
 
-    onSubmit: (value) => {
+    onSubmit: (value, e) => {
       setUserName(value.userName);
       setEmail(value.email);
       setPhone(value.phone);
@@ -92,11 +99,14 @@ const SignUp = () => {
       var arr = data;
       arr.push(value);
       setData(arr);
+      console.log(arr);
       localStorage.setItem("data", JSON.stringify(arr));
       formik.resetForm();
       setIsSubmitted(true);
       setTimeout(() => {
         setIsSubmitted(false);
+        // handleChange(e,5);
+        navigate("/login");
       }, 5000);
     },
   });
@@ -104,10 +114,6 @@ const SignUp = () => {
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
-
-  // const handleMouseDownPassword = (event) => {
-  //   event.preventDefault();
-  // };
 
   return (
     <>
@@ -181,9 +187,7 @@ const SignUp = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}                
-                    >
+                    <IconButton onClick={handleClickShowPassword}>
                       {values.showPassword ? (
                         <VisibilityIcon />
                       ) : (
