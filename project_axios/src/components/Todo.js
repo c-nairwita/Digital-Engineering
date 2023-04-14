@@ -8,14 +8,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {
-  Button,
-  Modal,
-  Typography,
-  Box,
-  TextField,
-} from "@mui/material";
-import AddTaskIcon from '@mui/icons-material/AddTask';
+import { Button, Modal, Typography, Box, TextField } from "@mui/material";
+import AddTaskIcon from "@mui/icons-material/AddTask";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
@@ -168,7 +162,7 @@ const Todo = () => {
 
   const handleChangeStatus = (e, todo) => {
     console.log(completed);
-    alert("Change status?")
+    alert("Change status?");
     var newTodo = {
       userId: todo.userId,
       id: todo.id,
@@ -195,18 +189,16 @@ const Todo = () => {
 
       <Button
         style={{
-          display: "flex",
           float: "right",
           marginRight: "3rem",
-          height: "4rem",
+          marginBottom: "1rem",
+          backgroundColor: "#202020",
         }}
-        color="secondary"
+        variant="contained"
         onClick={handleAdd}
       >
-        <div style={{ fontSize: "50px", marginRight: "3px" }}>
-          <AddTaskIcon />
-        </div>
-        <h5 style={{ marginTop: "2rem" }}>Add To-Do</h5>
+        <AddTaskIcon sx={{ marginRight: "5px" }} />
+        <b>Add To-Do</b>
       </Button>
 
       <TableContainer component={Paper}>
@@ -240,6 +232,7 @@ const Todo = () => {
                 {todo.completed ? (
                   <StyledTableCell>
                     <Button
+                      color="success"
                       onClick={(e) => {
                         handleChangeStatus(e, todo);
                       }}
@@ -250,6 +243,7 @@ const Todo = () => {
                 ) : (
                   <StyledTableCell>
                     <Button
+                      color="error"
                       onClick={(e) => {
                         handleChangeStatus(e, todo);
                       }}
@@ -262,8 +256,12 @@ const Todo = () => {
                 <StyledTableCell>
                   <span>
                     <Button
-                      variant="outlined"
-                      sx={{ marginRight: "1rem" }}
+                      variant="contained"
+                      sx={{
+                        marginRight: "1rem",
+                        backgroundColor: "#D8D8D8",
+                        color: "black",
+                      }}
                       onClick={(e) => {
                         handleEdit(e, todo);
                       }}
@@ -271,7 +269,8 @@ const Todo = () => {
                       Edit
                     </Button>
                     <Button
-                      variant="outlined"
+                      variant="contained"
+                      sx={{ backgroundColor: "#D8D8D8", color: "black" }}
                       onClick={(e) => {
                         handleDelete(e, todo.id);
                       }}
