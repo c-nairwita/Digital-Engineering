@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, Modal, Typography, Box, TextField } from "@mui/material";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
@@ -22,6 +23,8 @@ const Todo = () => {
 
   const [editing, setEditing] = useState(false);
   const [adding, setAdding] = useState(false);
+
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios
@@ -160,6 +163,7 @@ const Todo = () => {
   };
   //Add part end
 
+  //Status change part
   const handleChangeStatus = (e, todo) => {
     console.log(completed);
     alert("Change status?");
@@ -180,6 +184,16 @@ const Todo = () => {
         console.log(err);
       });
   };
+  //Status change part end
+
+  //Search part
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
+  const filteredTodo = todos.filter((todo) =>
+    todo.title.toLowerCase().includes(search.toLowerCase())
+  );
+  //Search part end
 
   return (
     <>
@@ -187,19 +201,33 @@ const Todo = () => {
         To-Do List
       </Typography>
 
-      <Button
-        style={{
-          float: "right",
-          marginRight: "3rem",
-          marginBottom: "1rem",
-          backgroundColor: "#202020",
-        }}
-        variant="contained"
-        onClick={handleAdd}
-      >
-        <AddTaskIcon sx={{ marginRight: "5px" }} />
-        <b>Add To-Do</b>
-      </Button>
+      <div style={{display: 'flex'}}>
+        <div style={{ display: "flex", marginLeft: "2rem", width: '50%' }}>
+          <SearchIcon sx={{ fontSize: "xx-large" }} />
+          <input
+            style={{ float: "left", height: "1.5rem" }}
+            placeholder="Search"
+            value={search}
+            onChange={handleSearch}
+          ></input>
+        </div>
+
+        <div style={{width: '50%' }}>
+          <Button
+            style={{
+              float: "right",
+              marginRight: "3rem",
+              marginBottom: "1rem",
+              backgroundColor: "#202020",
+            }}
+            variant="contained"
+            onClick={handleAdd}
+          >
+            <AddTaskIcon sx={{ marginRight: "5px" }} />
+            <b>Add To-Do</b>
+          </Button>
+        </div>
+      </div>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -212,7 +240,7 @@ const Todo = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {todos.map((todo, index) => (
+            {filteredTodo.map((todo, index) => (
               <StyledTableRow key={index}>
                 <StyledTableCell component="th" scope="row">
                   {todo.id}
