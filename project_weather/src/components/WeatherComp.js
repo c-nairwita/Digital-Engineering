@@ -29,7 +29,7 @@ export default function WeatherComp() {
   const [selectedCity, setSelectedCity] = useState("");
   const data = useSelector((state) => state);
   const weather = data.weather;
-  console.log(data)
+  console.log(data);
   console.log(weather);
 
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ export default function WeatherComp() {
     fontWeight: "bold",
     textAlign: "center",
     fontFamily: "Times Roman",
-    textShadow: "0 0 3px #fff, 0 0 1px #fff, 0 0 3px #fff",
+    // textShadow: "0 0 3px #fff, 0 0 1px #fff, 0 0 3px #fff",
   };
   const boxStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.5)",
@@ -55,6 +55,12 @@ export default function WeatherComp() {
     borderRadius: 8,
     border: "1px solid grey",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+  };
+  const imgStyle = {
+    background: "rgba(255, 255, 255, 0.1)",
+    height: "3rem",
+    width: "3rem",
+    marginLeft: "1rem",
   };
 
   return (
@@ -77,7 +83,7 @@ export default function WeatherComp() {
 
       {Object.keys(weather).length !== 0 ? (
         <>
-          <div style={{ display: "flex", height: "60%" }}>
+          <div style={{ display: "flex", height: "58%" }}>
             <Box sx={boxStyle}>
               <h4>Temperature:</h4>
               <Typography variant="h4" paddingTop="10%">
@@ -109,12 +115,18 @@ export default function WeatherComp() {
           <div>
             <Typography variant="h4" fontFamily="times-roman">
               <LocationOnIcon fontSize="large" />
-              {selectedCity.city.toUpperCase()}
+              {selectedCity.city.toUpperCase()},&nbsp;
+              {weather.list[0].weather[0].main.toLowerCase()}
+              <img
+                src={`http://openweathermap.org/img/wn/${weather.list[0].weather[0].icon}@2x.png`}
+                style={imgStyle}
+                alt=""
+              />
             </Typography>
-            <img src={`http://openweathermap.org/img/wn/${weather.list[0].weather[0].icon}@2x.png`} style={{background: '#000'}} alt="" />
-            <h5>
+
+            <h4>
               {dateTime.toLocaleTimeString()} - {dateTime.toLocaleDateString()}
-            </h5>
+            </h4>
           </div>
         </>
       ) : (
