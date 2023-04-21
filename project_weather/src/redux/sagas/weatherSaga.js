@@ -8,7 +8,7 @@ import axios from "axios";
 
 function* fetchWeatherSaga(action) {
   try {
-    const apiKey = "6557810176c36fac5f0db536711a6c52";
+    const apiKey = process.env.REACT_APP_API_KEY;
     const { city } = action.payload;
     const response = yield call(
       axios.get,

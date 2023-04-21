@@ -29,6 +29,7 @@ export default function WeatherComp() {
   const [selectedCity, setSelectedCity] = useState("");
   const data = useSelector((state) => state);
   const weather = data.weather;
+  console.log(data)
   console.log(weather);
 
   const dispatch = useDispatch();
@@ -110,6 +111,7 @@ export default function WeatherComp() {
               <LocationOnIcon fontSize="large" />
               {selectedCity.city.toUpperCase()}
             </Typography>
+            <img src={`http://openweathermap.org/img/wn/${weather.list[0].weather[0].icon}@2x.png`} style={{background: '#000'}} alt="" />
             <h5>
               {dateTime.toLocaleTimeString()} - {dateTime.toLocaleDateString()}
             </h5>
