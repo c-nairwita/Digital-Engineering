@@ -1,0 +1,4 @@
+export const ADD_CAKE = 'ADD_CAKE'
+export const ORDER_CAKE = 'ORDER_CAKE'
+export const ADD_CAKE_SUCCESS = 'ADD_CAKE_SUCCESS'
+export const ORDER_CAKE_SUCCESS = 'ORDER_CAKE_SUCCESS'

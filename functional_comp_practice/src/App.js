@@ -9,7 +9,7 @@ import Quiz from './component/quizQ2';
 function App() {
   return (
     <div className="App">
-      {/* <Count /> */}
+      <Count />
       {/* <InputForm /> */}
       {/* <UserForm /> */}
       {/* <ListDisplay /> */}

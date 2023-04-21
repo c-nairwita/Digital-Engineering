@@ -1,5 +1,11 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodoReq,
+  deleteTodoReq,
+  editTodoReq,
+  fetchTodoReq,
+} from "../redux/actionTypes/todoActionTypes";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,20 +14,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {
-  Button,
-  Modal,
-  Typography,
-  Box,
-  TextField,
-} from "@mui/material";
+import { Button, Modal, Typography, Box, TextField } from "@mui/material";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import SearchIcon from "@mui/icons-material/Search";
+import axios from "axios";
 
-const Todo = () => {
-  const [todos, setTodos] = useState([]);
+export default function TodoComp() {
+  const todos = useSelector((state) => state.todos);
 
-  const [userId, setUserId] = useState("");
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [completed, setCompleted] = useState(false);
@@ -32,18 +32,11 @@ const Todo = () => {
 
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/todos")
-      .then((res) => {
-        setTodos(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const dispatch = useDispatch();
 
-  console.log(todos);
+  useEffect(() => {
+    dispatch(fetchTodoReq());
+  }, [dispatch]);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -54,7 +47,6 @@ const Todo = () => {
       fontSize: 14,
     },
   }));
-
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
@@ -64,14 +56,12 @@ const Todo = () => {
       border: 0,
     },
   }));
-
   const headerStyle = {
     fontSize: "3rem",
     fontWeight: "bold",
     textAlign: "center",
     fontFamily: "Times Roman",
   };
-
   const style = {
     position: "absolute",
     top: "50%",
@@ -84,11 +74,34 @@ const Todo = () => {
     p: 4,
   };
 
-  //Edit part
-  const handleEdit = (e, todo) => {
+  //Add
+  const handleAddClose = () => {
+    setAdding(false);
+  };
+  const handleAdd = () => {
+    setAdding(true);
+  };
+  const handleAddChange = (e) => {
+    setTitle(e.target.value);
+  };
+  const handleAddTodo = () => {
+    // e.preventDefault();
+    const newId = Math.max(...todos.map((todo) => todo.id));
+    console.log(newId);
+    var newTodo = {
+      id: newId + 1,
+      title: title,
+      completed: false,
+    };
+    dispatch(addTodoReq(newTodo));
+    setAdding(false);
+  };
+  //Add end
+
+  //Edit
+  const handleEdit = (todo) => {
     setEditing(true);
     setCurrentTitle(todo.title);
-    setUserId(todo.userId);
     setId(todo.id);
     setCompleted(todo.completed);
   };
@@ -99,83 +112,38 @@ const Todo = () => {
     setCurrentTitle(e.target.value);
   };
   const handleEditTodo = (e, currentTitle) => {
-    e.preventDefault();
     let currentId = id;
     var editedTodo = {
-      userId: userId,
       id: id,
       title: currentTitle,
       completed: completed,
     };
-    axios
-      .put(`http://localhost:5000/todos/${currentId}`, editedTodo)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    dispatch(editTodoReq(currentId, editedTodo));
     setEditing(false);
   };
-  //Edit part end
+  //Edit end
 
   //Delete part
-  const handleDelete = (e, todoId) => {
-    e.preventDefault();
+  const handleDelete = (todoId) => {
     alert("Delete task?");
-    axios
-      .delete(`http://localhost:5000/todos/${todoId}`)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(deleteTodoReq(todoId));
   };
   //Delete part end
 
-  //Add part
-  const handleAddClose = () => {
-    setAdding(false);
+  //Search part
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
   };
-  const handleAdd = () => {
-    setAdding(true);
-  };
-  const handleAddChange = (e) => {
-    setTitle(e.target.value);
-  };
-  const handleAddTodo = (e) => {
-    e.preventDefault();
-    const newTodoUserId = Math.max(...todos.map((todo) => todo.userId));
-    const newId = Math.max(...todos.map((todo) => todo.id));
-    console.log(newTodoUserId);
-    console.log(newId);
-    var newTodo = {
-      userId: newTodoUserId + 1,
-      id: newId + 1,
-      title: title,
-      completed: false,
-    };
-    axios
-      .post("http://localhost:5000/todos", newTodo)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    setAdding(false);
-  };
-  //Add part end
+  const filteredTodo = todos.filter((todo) =>
+    todo.title.toLowerCase().includes(search.toLowerCase())
+  );
+  //Search part end
 
   //Status change part
   const handleChangeStatus = (e, todo) => {
     console.log(completed);
     alert("Change status?");
     var newTodo = {
-      userId: todo.userId,
       id: todo.id,
       title: todo.title,
       completed: !todo.completed,
@@ -192,15 +160,6 @@ const Todo = () => {
       });
   };
   //Status change part end
-
-  //Search part
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-  };
-  const filteredTodo = todos.filter((todo) =>
-    todo.title.toLowerCase().includes(search.toLowerCase())
-  );
-  //Search part end
 
   return (
     <>
@@ -249,9 +208,7 @@ const Todo = () => {
           <TableBody>
             {filteredTodo.map((todo, index) => (
               <StyledTableRow key={index}>
-                <StyledTableCell component="th" scope="row">
-                  {todo.id}
-                </StyledTableCell>
+                <StyledTableCell>{todo.id}</StyledTableCell>
                 <StyledTableCell>
                   {todo.completed ? (
                     <Typography
@@ -298,7 +255,7 @@ const Todo = () => {
                         color: "black",
                       }}
                       onClick={(e) => {
-                        handleEdit(e, todo);
+                        handleEdit(todo);
                       }}
                     >
                       Edit
@@ -307,7 +264,7 @@ const Todo = () => {
                       variant="contained"
                       sx={{ backgroundColor: "#D8D8D8", color: "black" }}
                       onClick={(e) => {
-                        handleDelete(e, todo.id);
+                        handleDelete(todo.id);
                       }}
                     >
                       Delete
@@ -326,7 +283,12 @@ const Todo = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" fontFamily='times-roman' variant="h5" component="h2">
+          <Typography
+            id="modal-modal-title"
+            fontFamily="times-roman"
+            variant="h5"
+            component="h2"
+          >
             Add Task:
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -342,13 +304,7 @@ const Todo = () => {
                 onChange={handleAddChange}
                 fullWidth
               ></TextField>
-              <Button
-                type="submit"
-                color="primary"
-                onClick={(e) => {
-                  handleAddTodo(e);
-                }}
-              >
+              <Button type="submit" color="primary" onClick={handleAddTodo}>
                 Save
               </Button>
               <Button onClick={handleAddClose} color="primary">
@@ -365,7 +321,12 @@ const Todo = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" fontFamily='times-roman' variant="h5" component="h2">
+          <Typography
+            id="modal-modal-title"
+            fontFamily="times-roman"
+            variant="h5"
+            component="h2"
+          >
             Edit Task:
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -401,6 +362,4 @@ const Todo = () => {
       </Modal>
     </>
   );
-};
-
-export default Todo;
+}
