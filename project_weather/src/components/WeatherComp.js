@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchWeatherReq } from "../redux/actionTypes/weatherActionTypes";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, TextField, Button } from "@mui/material";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
@@ -22,12 +22,14 @@ const cities = [
   { city: "Meerut", label: "Meerut" },
 ];
 const times = [
-  { time: "06:00:00", label: "06:00:00" },
-  { time: "09:00:00", label: "09:00:00" },
-  { time: "12:00:00", label: "12:00:00" },
-  { time: "15:00:00", label: "15:00:00" },
-  { time: "18:00:00", label: "18:00:00" },
-  { time: "21:00:00", label: "21:00:00" },
+  { time: "03:00 AM", label: "03:00 AM" },
+  { time: "06:00 AM", label: "06:00 AM" },
+  { time: "09:00 AM", label: "09:00 AM" },
+  { time: "12:00 PM", label: "12:00 PM" },
+  { time: "03:00 PM", label: "03:00 PM" },
+  { time: "06:00 PM", label: "06:00 PM" },
+  { time: "09:00 PM", label: "09:00 PM" },
+  { time: "12:00 AM", label: "12:00 AM" },
 ];
 
 export default function WeatherComp() {
@@ -54,27 +56,35 @@ export default function WeatherComp() {
     console.log(selectedTime);
 
     switch (selectedTime.time) {
-      case "06:00:00": {
+      case "03:00 AM": {
+        setTimeIndex(6);
+        break;
+      }
+      case "06:00 AM": {
+        setTimeIndex(7);
+        break;
+      }
+      case "09:00 AM": {
         setTimeIndex(0);
         break;
       }
-      case "09:00:00": {
+      case "12:00 PM": {
         setTimeIndex(1);
         break;
       }
-      case "12:00:00": {
+      case "03:00 PM": {
         setTimeIndex(2);
         break;
       }
-      case "15:00:00": {
+      case "06:00 PM": {
         setTimeIndex(3);
         break;
       }
-      case "18:00:00": {
+      case "09:00 PM": {
         setTimeIndex(4);
         break;
       }
-      case "21:00:00": {
+      case "12:00 AM": {
         setTimeIndex(5);
         break;
       }
@@ -118,8 +128,11 @@ export default function WeatherComp() {
       <Typography variant="h2" component="h2" style={headerStyle}>
         Weather Report
       </Typography>
-      <div style={{ display: "flex", marginTop: '2.5rem' }}>
-        <h2 style={{ fontFamily: "times-roman", marginLeft: '3rem' }}>Select a city:</h2>
+
+      <div style={{ display: "flex", marginTop: "2.5rem" }}>
+        <h2 style={{ fontFamily: "times-roman", marginLeft: "3rem" }}>
+          Select a city:
+        </h2>
         <div style={{ width: "30%", margin: "auto" }}>
           <Select
             style={{ textAlign: "left" }}
@@ -130,6 +143,21 @@ export default function WeatherComp() {
             getOptionLabel={(option) => option.label}
             placeholder="Please select"
           />
+          {/* <input
+        type="text"
+          value={selectedCity}
+          onChange={(e)=>{handleChange(e)}}
+          placeholder="Enter city"
+          style={{
+            backgroundColor: "white",
+            // marginLeft: "1rem",
+            border: 'none',
+            borderRadius: '3px',
+            height: '2.2rem',
+            width: "100%",
+          }}
+          
+        ></input> */}
         </div>
         <h2 style={{ fontFamily: "times-roman" }}>Select time:</h2>
         <div style={{ width: "30%", margin: "auto" }}>

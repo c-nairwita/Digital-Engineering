@@ -3,7 +3,7 @@ import {
   fetchWeatherReq,
   fetchWeatherSuccess,
 } from "../actionTypes/weatherActionTypes";
-import { call, put, takeLatest} from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
 function* fetchWeatherSaga(action) {
